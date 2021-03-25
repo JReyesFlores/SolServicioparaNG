@@ -1,5 +1,5 @@
 **Proyecto de apoyo**
-Este proyecto solo fue creado con fines de apoyo para el curso de angular en PLATI. Se requiere lo siguiente para poder ejecutar el proyecto:
+Este proyecto solo fue creado con fines de apoyo para el curso de angular en PLATZI. Se requiere lo siguiente para poder ejecutar el proyecto:
 - Visual Studio 2019
 - SDK NET Core 3.1 o superior
 
