@@ -58,21 +58,22 @@ namespace WebService.Controllers
         }
 
         [HttpPut]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Product>> Update([FromBody] Product product)
+        public async Task<ActionResult<Product>> Update([FromBody] Product product, [FromRoute] string id)
         {
-            var productDb = await _context.Products.SingleOrDefaultAsync(x => x.id.Equals(product.id));
+            var productDb = await _context.Products.SingleOrDefaultAsync(x => x.id.Equals(id));
             if (productDb != null)
             {
-                productDb.image = product.image;
-                productDb.price = product.price;
-                productDb.title = product.title;
-                productDb.description = product.description;
+                productDb.image = product.image == null ? productDb.image : product.image;
+                productDb.price = product.price == 0 ? productDb.price : product.price;
+                productDb.title = product.title == null ? productDb.title : product.title;
+                productDb.description = product.description == null ? productDb.description : product.description;
 
                 await _context.SaveChangesAsync();
-                return product;
+                return productDb;
             }
 
             return BadRequest();
@@ -81,20 +82,27 @@ namespace WebService.Controllers
         [HttpDelete]
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Delete([FromRoute] string id)
+        public async Task<ActionResult<bool>> Delete([FromRoute] string id)
         {
-            var productDb = await _context.Products.SingleOrDefaultAsync(x => x.id.Equals(id));
-            if (productDb != null)
+            try
             {
-                _context.Products.Remove(productDb);
-                await _context.SaveChangesAsync();
+                var productDb = await _context.Products.SingleOrDefaultAsync(x => x.id.Equals(id));
+                if (productDb != null)
+                {
+                    _context.Products.Remove(productDb);
+                    await _context.SaveChangesAsync();
 
-                return NoContent();
+                    return true;
+                }
+
+                return false;
             }
-
-            return BadRequest();
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }
