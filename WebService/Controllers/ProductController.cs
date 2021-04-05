@@ -81,8 +81,7 @@ namespace WebService.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)] 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> Delete([FromRoute] string id)
         {
